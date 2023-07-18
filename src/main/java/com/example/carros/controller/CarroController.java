@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/carros")
 @RequiredArgsConstructor
@@ -23,7 +25,16 @@ public class CarroController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Carro> bucarCarroPorId(@PathVariable Long id) {
-        return ResponseEntity.ok(carroService.getCarroPorId(id));
+        return carroService.buscarPorId(id).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/buscar/{tipo}")
+    public ResponseEntity<List<Carro>> buscarPorTipo(@PathVariable String tipo) {
+        List<Carro> carros = carroService.buscarPorTipo(tipo);
+        return carros.isEmpty() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.ok(carros);
     }
 
     @PostMapping
@@ -41,5 +52,7 @@ public class CarroController {
         carroService.removerCarro(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
+
 }
 

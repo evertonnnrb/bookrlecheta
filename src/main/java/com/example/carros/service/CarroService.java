@@ -8,6 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CarroService {
@@ -18,21 +21,25 @@ public class CarroService {
         return carroRepository.save(carro);
     }
 
-    @Transactional
     public Carro atualizarCarro(Long id) {
-        return salvarCarro(getCarroPorId(id));
+        Carro carro = buscarPorId(id).get();
+        return carroRepository.save(carro);
     }
 
     public Page<Carro> buscaPaginada(Pageable pageable) {
         return carroRepository.findAll(pageable);
     }
 
-    public Carro getCarroPorId(Long id) {
-        return carroRepository.findById(id).orElseThrow();
+    public Optional<Carro> buscarPorId(Long id) {
+        return carroRepository.findById(id);
     }
 
     @Transactional
     public void removerCarro(Long id) {
-        carroRepository.delete(getCarroPorId(id));
+        carroRepository.delete(buscarPorId(id).get());
+    }
+
+    public List<Carro> buscarPorTipo(String tipo) {
+        return carroRepository.findByTipo(tipo);
     }
 }
