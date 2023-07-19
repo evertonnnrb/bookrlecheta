@@ -1,6 +1,7 @@
 package com.example.carros.service;
 
 import com.example.carros.model.Carro;
+import com.example.carros.model.dto.CarroDTO;
 import com.example.carros.repository.CarroRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,13 @@ public class CarroService {
     public Carro atualizarCarro(Long id) {
         Carro carro = buscarPorId(id).get();
         return carroRepository.save(carro);
+    }
+
+    public List<CarroDTO> getCarros() {
+        return carroRepository.findAll()
+                .stream()
+                .map(CarroDTO::create)
+                .collect(Collectors.toList());
     }
 
     public Page<Carro> buscaPaginada(Pageable pageable) {

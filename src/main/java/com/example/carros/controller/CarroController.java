@@ -1,6 +1,7 @@
 package com.example.carros.controller;
 
 import com.example.carros.model.Carro;
+import com.example.carros.model.dto.CarroDTO;
 import com.example.carros.service.CarroService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,11 @@ public class CarroController {
     @GetMapping
     public ResponseEntity<Page<Carro>> buscarCarroPaginados(Pageable pageable) {
         return ResponseEntity.ok(carroService.buscaPaginada(pageable));
+    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<CarroDTO>> listarTodos() {
+        return ResponseEntity.ok(carroService.getCarros());
     }
 
     @GetMapping("/{id}")
